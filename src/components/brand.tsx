@@ -3,7 +3,7 @@ import { ArrowUpRight, CalendarRange, LockKeyhole } from "lucide-react";
 import { demoBookingEnabled } from "@/lib/supabase/env";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
-  return <Link href="/" className={`brand ${inverse ? "brand-inverse" : ""}`} aria-label="Stravly, inicio">
+  return <Link href="/" className={`brand nav__logo ${inverse ? "brand-inverse" : ""}`} aria-label="Stravly, inicio">
     <span className="brand-mark"><CalendarRange size={18} aria-hidden="true" strokeWidth={2.1} /></span>
     <span>stravly<span className="brand-dot">.</span></span>
   </Link>;
@@ -11,7 +11,7 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
 
 export function Header() {
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
-  return <header className="site-header">
+  return <header className="site-header nav">
     <div className="shell nav-row">
       <Brand />
       <nav aria-label="Navegación principal" className="main-nav">

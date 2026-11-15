@@ -13,7 +13,7 @@ const appointments = [
 ] as const;
 
 function AgendaExample() {
-  return <figure className="team-preview" data-visual aria-label="Agenda de ejemplo con las citas de dos profesionales de Barbería Demo">
+  return <figure className="team-preview hero__media" data-visual aria-label="Agenda de ejemplo con las citas de dos profesionales de Barbería Demo">
     <div className="team-frame app-frame">
       <div className="team-frame-header">
         <div className="team-frame-title"><span className="team-frame-mark"><CalendarDays size={18} aria-hidden="true" /></span>
@@ -56,10 +56,10 @@ export default function Home() {
           <div className="hero-copy">
             <h1>{multi ? <>Tu agenda. <em>A tu ritmo.</em></> : "Tus reservas, sin complicaciones."}</h1>
             <div className="hero-side">
-              <p>{multi ? "Reúne las agendas de tu equipo y recibe reservas desde un solo enlace." : "Elige un servicio, encuentra un horario libre y confirma tu cita en minutos."}</p>
-              <div className="hero-actions">
-                <Link className="button button-primary" href={multi ? "/demo" : "/reservar"}>{multi ? "Probar demo" : "Reservar una cita"} <ArrowRight size={17} aria-hidden="true" /></Link>
-                <Link className="button button-quiet" href={multi ? "/registro" : "/demo"}>{multi ? "Crear mi negocio" : "Probar demo"}</Link>
+              <p className="hero__lead">{multi ? "Reúne las agendas de tu equipo y recibe reservas desde un solo enlace." : "Elige un servicio, encuentra un horario libre y confirma tu cita en minutos."}</p>
+              <div className="hero-actions btn-row">
+                <Link className="btn button button-primary" href={multi ? "/demo" : "/reservar"}>{multi ? "Probar demo" : "Reservar una cita"} <ArrowRight size={17} aria-hidden="true" /></Link>
+                <Link className="btn button button-quiet" href={multi ? "/registro" : "/demo"}>{multi ? "Crear mi negocio" : "Probar demo"}</Link>
               </div>
             </div>
           </div>
@@ -79,12 +79,10 @@ export default function Home() {
               <Icon size={20} aria-hidden="true" /><div><h3>{title}</h3><p>{text}</p></div>
             </li>)}
           </ol>
-        </div>
-      </section>
-      <section className="landing-demo" aria-labelledby="demo-home">
-        <div className="shell wrap demo-layout">
-          <div><h2 id="demo-home">Una cita en Barbería Demo.</h2><p>Elige entre dos profesionales y confirma una reserva de prueba sin crear una cuenta.</p></div>
-          <Link className="button button-light" href="/demo">Reservar en la demo <ArrowUpRight size={17} aria-hidden="true" /></Link>
+          <div className="landing-demo demo-layout">
+            <div><h3>Una cita en Barbería Demo.</h3><p>Elige entre dos profesionales y confirma una reserva de prueba sin crear una cuenta.</p></div>
+            <Link className="button button-light" href="/demo">Reservar en la demo <ArrowUpRight size={17} aria-hidden="true" /></Link>
+          </div>
         </div>
       </section>
     </main>
