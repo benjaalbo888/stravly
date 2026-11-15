@@ -145,4 +145,15 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
   await other.getByRole("button",{name:"Aceptar invitación"}).click();
   await expect(other).toHaveURL(new RegExp(`${first}$`));
   await expect(other.getByRole("link",{name:"Administradores",exact:true})).toHaveCount(0);
+
+  await other.goto("/dashboard");
+  await other.getByRole("button", { name: "Cerrar sesión" }).click();
+  await expect(other).toHaveURL(/\/login$/);
+  await other.getByLabel("Correo electrónico").fill(`norte-${suffix}@example.test`);
+  await other.getByLabel("Contraseña").fill(password);
+  await other.getByRole("button", { name: "Inicia sesión", exact: true }).click();
+  await expect(other.getByRole("heading", { name: "Mis negocios" })).toBeVisible();
+  await other.goto(first);
+  await expect(other.getByRole("heading", { name: "Barbería Central" })).toBeVisible();
+  await expect(other.getByRole("link", { name: "Administradores", exact: true })).toHaveCount(0);
 });
