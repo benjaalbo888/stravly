@@ -2,7 +2,7 @@ name: Verificar Stravly
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/multi-business]
   pull_request:
 
 permissions:
@@ -45,3 +45,45 @@ jobs:
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+
+  multi-business:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Supabase local y Mailpit
+        run: |
+          mkdir -p .local/supabase-ci/supabase
+          cp tests/supabase/config.toml tests/supabase/confirmation.html .local/supabase-ci/supabase/
+          cp -R supabase/migrations .local/supabase-ci/supabase/
+          npx --yes supabase@3.1.0 start --workdir .local/supabase-ci -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor > "$RUNNER_TEMP/stravly-supabase.log" 2>&1 || {
+            tail -n 30 "$RUNNER_TEMP/stravly-supabase.log"
+            exit 1
+          }
+      - run: npx playwright install --with-deps chromium
+      - name: Verificar registro y reserva multiempresa
+        env:
+          STRAVLY_MULTI_BUSINESS: '1'
+          STRAVLY_CAPTURE_MULTI: '1'
+          NEXT_TELEMETRY_DISABLED: '1'
+        run: |
+          set -a
+          source <(npx --yes supabase@3.1.0 status --workdir .local/supabase-ci -o env | sed -nE '/^(API_URL|PUBLISHABLE_KEY|SECRET_KEY|MAILPIT_URL)=/p')
+          export SUPABASE_URL="$API_URL" SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY" SUPABASE_SECRET_KEY="$SECRET_KEY"
+          set +a
+          test -n "$SUPABASE_PUBLISHABLE_KEY"
+          test -n "$SUPABASE_SECRET_KEY"
+          npm run build
+          npm run test:multi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: success()
+        with:
+          name: stravly-multi-capturas
+          path: test-results/multi-*.png

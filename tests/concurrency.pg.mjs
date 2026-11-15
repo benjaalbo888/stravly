@@ -80,6 +80,31 @@ test("two independent PostgreSQL connections cannot reserve overlapping interval
     assert.equal(await blockedBooking, "unavailable");
 
     assert.equal((await pool.query("select count(*)::int as total from bookings")).rows[0].total, 4);
+
+    await pool.query("alter table auth.users add column email text, add column email_confirmed_at timestamptz");
+    await pool.query("update auth.users set email='demo@example.test',email_confirmed_at=now() where id=$1",[admin]);
+    await pool.query(await readFile(new URL("../supabase/migrations/20261115000100_multi_business.sql",import.meta.url),"utf8"));
+    const { rows:[business] } = await pool.query("insert into businesses(slug,name) values('race-test','Prueba') returning id");
+    const { rows: team } = await pool.query("insert into workers(business_id,name) values($1,'Primero'),($1,'Segundo') returning id",[business.id]);
+    const { rows:[item] } = await pool.query("insert into business_services(business_id,name,duration_minutes,price_clp) values($1,'Servicio',30,2500) returning id",[business.id]);
+    await pool.query("insert into business_hours select $1,d,'10:00','18:00',true from generate_series(1,7) d",[business.id]);
+    for (const worker of team) {
+      await pool.query("insert into worker_hours select $1,$2,d,'10:00','18:00',true from generate_series(1,7) d",[business.id,worker.id]);
+      await pool.query("insert into worker_services values($1,$2,$3)",[business.id,worker.id,item.id]);
+    }
+    const bookWorker = (conn, worker, pos, hash) => conn.query(
+      "select book_business('race-test',$1,$2,$3,'Cliente Demo','demo@example.test','+56900000000',$4) result",
+      [item.id,worker,slot(pos),hash.toString().padStart(64,"0")]).then(r => r.rows[0].result);
+    await a.query("begin");
+    assert.equal((await bookWorker(a,team[0].id,0,20)).status,"confirmed");
+    const exactWorker = bookWorker(b,team[0].id,0,21);
+    try { await blocked(); } finally { await a.query("commit"); }
+    assert.equal((await exactWorker).status,"unavailable");
+    await a.query("begin");
+    assert.equal((await bookWorker(a,team[0].id,3,22)).worker,"Primero");
+    const anyWorker = bookWorker(b,null,3,23);
+    try { await blocked(); } finally { await a.query("commit"); }
+    assert.equal((await anyWorker).worker,"Segundo");
   } finally {
     // Roll back only these two test connections, including if an assertion failed.
     if (a) { await a.query("rollback"); a.release(); }

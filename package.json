@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
     "test:e2e": "playwright test",
+    "test:multi": "playwright test --config playwright.multi.config.ts",
     "test:concurrency": "node --test tests/concurrency.pg.mjs"
   },
   "dependencies": {

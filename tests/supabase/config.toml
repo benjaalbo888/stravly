@@ -1,0 +1,17 @@
+project_id = "stravly-v2-integration"
+
+[auth]
+site_url = "http://127.0.0.1:3141"
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+otp_length = 6
+
+[auth.email.template.confirmation]
+subject = "Confirma tu cuenta de Stravly"
+content_path = "./supabase/confirmation.html"
+
+[db.seed]
+enabled = false
