@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   poweredByHeader: false,
+  agentRules: false,
   experimental: { serverActions: { bodySizeLimit: "32kb" } },
   async headers() {
     return [

@@ -84,4 +84,4 @@ npm run test:e2e
 
 MVP para un solo negocio. La confirmación se muestra en pantalla. Un siguiente paso sería añadir recordatorios, permitir reprogramar una cita con un enlace privado y definir un plazo de conservación de datos antes de usar Stravly con clientes reales.
 
-La demo pública de Vercel está pendiente de configurar. Consulta la [guía de despliegue y verificación](docs/despliegue.md).
+El flujo público de reserva se verificó contra un proyecto real de Supabase, incluida la competencia de dos clientes por la misma hora. La demo de Vercel está pendiente. Consulta la [guía de despliegue y verificación](docs/despliegue.md).
