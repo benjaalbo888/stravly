@@ -1,8 +1,8 @@
 # Stravly
 
-Stravly gestiona reservas para barberías y otros negocios con atención por cita. En la rama 2.0, cada negocio tiene su propia página pública y cada profesional tiene su propia agenda. Los clientes reservan sin abrir una cuenta.
+Stravly gestiona reservas para barberías y otros negocios con atención por cita. Cada negocio tiene su propia página pública y cada profesional tiene su propia agenda. Los clientes reservan sin abrir una cuenta.
 
-[Abrir la demo publicada de Estudio Norte (versión 1)](https://stravly.vercel.app/)
+[Abrir Stravly](https://stravly.vercel.app/)
 
 ## Qué puedes hacer
 
@@ -15,9 +15,9 @@ La agenda usa la zona horaria `America/Santiago`. Cada servicio consume un inter
 
 ## Tecnologías
 
-Next.js App Router, React, TypeScript, Tailwind CSS, Lucide, Supabase Auth y PostgreSQL. La demo se ejecuta en Vercel. Las pruebas usan Node.js, PGlite, PostgreSQL y Playwright.
+Next.js App Router, React, TypeScript, Tailwind CSS, Lucide, Supabase Auth y PostgreSQL. Stravly se ejecuta en Vercel. Las pruebas usan Node.js, PGlite, PostgreSQL y Playwright.
 
-## Capturas de la demo publicada
+## Capturas de la demo de la versión 1
 
 ![Portada de Stravly con acceso a la reserva y una vista del calendario](docs/capturas/inicio-escritorio.png)
 

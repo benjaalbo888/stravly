@@ -1,4 +1,6 @@
-# Desplegar Stravly en Vercel
+# Desplegar la versión 1 de Stravly en Vercel
+
+Para desplegar la plataforma multiempresa, consulta la [guía de Stravly 2.0](multi-business.md).
 
 ## Preparación
 
