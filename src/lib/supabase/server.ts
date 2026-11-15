@@ -33,10 +33,16 @@ export async function sessionClient(writable = false) {
 }
 
 export async function adminClient() {
+  const client = await authenticatedClient();
+  if (!client) return null;
+  const { data } = await client.rpc("is_stravly_admin");
+  return data === true ? client : null;
+}
+
+export async function authenticatedClient() {
   const client = await sessionClient();
   if (!client) return null;
   const { data: identity, error } = await client.auth.getClaims();
   if (error || !identity?.claims?.sub) return null;
-  const { data } = await client.rpc("is_stravly_admin");
-  return data === true ? client : null;
+  return client;
 }

@@ -1,32 +1,37 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import Image from "next/image";
 import { CalendarDays, Check, Clock3, Scissors, UserRound } from "lucide-react";
 import { dateLabel, money, santiagoDate, timeLabel } from "@/lib/schedule";
-import type { BookingState, Service } from "@/lib/models";
+import type { BookingState, Catalog, Service } from "@/lib/models";
 import { reserve } from "./actions";
 
 type SlotsState = { key: string; slots?: string[]; error?: string };
 
-export function BookingForm(props: { services: Service[]; today: string; lastDay: string }) {
+type BookingProps = { services: Service[]; today: string; lastDay: string; slug?: string; workers?: Catalog["workers"] };
+
+export function BookingForm(props: BookingProps) {
   const [reset, setReset] = useState(0);
   return <Wizard key={reset} {...props} reset={() => setReset((n) => n + 1)} />;
 }
 
-function Wizard({ services, today, lastDay, reset }: { services: Service[]; today: string; lastDay: string; reset: () => void }) {
+function Wizard({ services, today, lastDay, reset, slug, workers }: BookingProps & { reset: () => void }) {
   const [serviceId, setServiceId] = useState("");
+  const [worker, setWorker] = useState("");
   const [date, setDate] = useState("");
   const [slot, setSlot] = useState("");
   const [attempt, retry] = useState(0);
   const [response, setResponse] = useState<SlotsState>({ key: "" });
   const [contact, setContact] = useState({ name: "", email: "", phone: "" });
   const service = services.find((item) => item.id === serviceId);
-  const key = `${serviceId}:${date}:${attempt}`;
+  const professionals = workers?.filter((person) => person.services.includes(serviceId)) ?? [];
+  const key = `${serviceId}:${worker}:${date}:${attempt}`;
   const validDate = date >= today && date <= lastDay;
-  const canRequest = !!service && validDate;
+  const canRequest = !!service && validDate && (!slug || (professionals.length > 0 && !!worker));
   const current = response.key === key ? response : undefined;
   const [state, action, pending] = useActionState(async (prev: BookingState, form: FormData) => {
-    const next = await reserve(prev, form);
+    const next = await reserve(slug ?? null, prev, form);
     if (next.retrySlots) {
       setSlot("");
       retry((n) => n + 1);
@@ -38,6 +43,7 @@ function Wizard({ services, today, lastDay, reset }: { services: Service[]; toda
     if (!canRequest) return;
     const controller = new AbortController();
     const query = new URLSearchParams({ servicio: serviceId, fecha: date });
+    if (slug) { query.set("negocio", slug); query.set("profesional", worker); }
     async function load() {
       try {
         const result = await fetch(`/api/horarios?${query}`, { signal: controller.signal });
@@ -50,18 +56,19 @@ function Wizard({ services, today, lastDay, reset }: { services: Service[]; toda
     }
     void load();
     return () => controller.abort();
-  }, [canRequest, serviceId, date, key]);
+  }, [canRequest, serviceId, date, key, slug, worker]);
 
   useEffect(() => {
     if (state.confirmed) document.getElementById("confirmacion")?.focus();
   }, [state.confirmed]);
 
   if (state.confirmed) {
-    const { code, service, startsAt, duration, price } = state.confirmed;
+    const { code, service, startsAt, duration, price, worker: confirmedWorker } = state.confirmed;
     return <section className="card auth-card stack" aria-labelledby="confirmacion">
       <span className="feature-icon"><Check aria-hidden="true" /></span>
       <h2 id="confirmacion" tabIndex={-1}>¡Cita confirmada!</h2>
       <p>Guarda este código para identificar tu reserva:</p><p><strong className="booking-code">{code}</strong></p>
+      {confirmedWorker && <p>Te atenderá <strong>{confirmedWorker}</strong>.</p>}
       <Recap service={service} date={santiagoDate(new Date(startsAt))} start={startsAt} duration={duration} price={price} />
       <button type="button" className="button button-quiet" onClick={reset}>Hacer otra reserva</button>
     </section>;
@@ -74,24 +81,40 @@ function Wizard({ services, today, lastDay, reset }: { services: Service[]; toda
         <div className="card-title"><Scissors size={20} aria-hidden="true" /><h2 id="servicio">1. Elige un servicio</h2></div>
         <div className="choice-grid" role="radiogroup" aria-labelledby="servicio">{services.map((item) =>
           <label className="choice" key={item.id}><input type="radio" name="service" value={item.id} checked={item.id === serviceId}
-            onChange={() => { setServiceId(item.id); setSlot(""); }} required />
+            onChange={() => { setServiceId(item.id); setWorker(""); setSlot(""); }} required />
             <span><strong>{item.name}</strong><small>{item.description} · {item.duration_minutes} min</small></span>
             <span className="choice-price">{money(item.price_clp)}</span>
           </label>
         )}</div>
       </section>
+      {slug && <section className="card stack" aria-labelledby="profesional">
+        <div className="card-title !mb-0"><UserRound size={20} aria-hidden="true" /><h2 id="profesional">Elige un profesional</h2></div>
+        {!service ? <p className="muted">Selecciona un servicio para ver quién puede atenderte.</p>
+          : !professionals.length ? <p className="notice">Todavía no hay profesionales asignados a este servicio.</p>
+          : <div className="choice-grid" role="radiogroup" aria-labelledby="profesional">
+            {professionals.length > 1 && <label className="choice"><input type="radio" name="worker" value="any" checked={worker === "any"}
+              onChange={() => { setWorker("any"); setSlot(""); }} required />Cualquier profesional disponible</label>}
+            {professionals.map((person) => <label className="choice" key={person.id}>
+              <input type="radio" name="worker" value={person.id} checked={worker === String(person.id)}
+                onChange={() => { setWorker(String(person.id)); setSlot(""); }} required />
+              {person.photo_url && <Image src={person.photo_url} alt="" width={40} height={40} unoptimized referrerPolicy="no-referrer" className="size-10 rounded-full object-cover" />}
+              <span><strong>{person.name}</strong>{person.description && <small>{person.description}</small>}</span>
+            </label>)}
+          </div>}
+      </section>}
       <section className="card stack" aria-labelledby="fecha-hora">
         <div className="card-title !mb-0"><CalendarDays size={20} aria-hidden="true" /><h2 id="fecha-hora">2. Elige fecha y hora</h2></div>
         <label className="field">Fecha<input type="date" name="date" min={today} max={lastDay} value={date} required
           onChange={(event) => { setDate(event.target.value); setSlot(""); }} /></label>
         <div aria-live="polite" aria-busy={canRequest && !current}>
-          {!canRequest && <p className="muted">Selecciona un servicio y una fecha para ver los horarios.</p>}
+          {!canRequest && <p className="muted">{slug ? "Selecciona un servicio, un profesional y una fecha para ver los horarios." : "Selecciona un servicio y una fecha para ver los horarios."}</p>}
           {canRequest && !current && <p className="muted">Cargando horarios…</p>}
           {current?.error && <div className="notice error">{current.error} <button className="button button-quiet button-small" type="button" onClick={() => retry((n) => n + 1)}>Reintentar</button></div>}
           {current?.slots?.length === 0 && <p className="notice">No quedan horarios para este día. Prueba con otra fecha.</p>}
           {!!current?.slots?.length && <div className="slots" role="radiogroup" aria-label="Horarios disponibles">
             {current.slots.map((time) => <label className="slot" key={time}><input required type="radio" name="start" value={time} checked={slot === time}
-              onChange={() => setSlot(time)} />{timeLabel(time)}</label>)}
+              onChange={() => setSlot(time)} />{timeLabel(time)}{current.slots?.filter((item) => timeLabel(item) === timeLabel(time)).length !== 1 &&
+                ` (${new Intl.DateTimeFormat("es-CL", { timeZone: "America/Santiago", timeZoneName: "shortOffset" }).formatToParts(new Date(time)).find((part) => part.type === "timeZoneName")?.value})`}</label>)}
           </div>}
         </div>
         <p className="muted text-xs"><Clock3 className="inline" size={14} aria-hidden="true" /> Horario de Santiago de Chile.</p>
@@ -107,7 +130,7 @@ function Wizard({ services, today, lastDay, reset }: { services: Service[]; toda
             value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} /></label>
         </div>
         <div className="trap" aria-hidden="true"><label>Sitio web<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
-        <p className="muted text-xs">Usamos estos datos para gestionar tu cita. En la agenda de demostración, usa datos ficticios.</p>
+        <p className="muted text-xs">Usamos estos datos para gestionar tu cita.{(!slug || slug === "estudio-norte") && " En la agenda de demostración, usa datos ficticios."}</p>
       </section>
     </fieldset>
     <aside className="card stack booking-recap" aria-label="Resumen de la cita">

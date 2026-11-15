@@ -9,13 +9,14 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
 }
 
 export function Header() {
+  const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
   return <header className="site-header">
     <div className="shell nav-row">
       <Brand />
       <nav aria-label="Navegación principal" className="main-nav">
         <Link href="/">Inicio</Link><Link href="/#como-funciona">Cómo funciona</Link><Link href="/reservar">Reservar</Link>
       </nav>
-      <Link className="admin-link" href="/admin"><LockKeyhole size={15} aria-hidden="true" /> <span>Acceso administrador</span></Link>
+      <Link className="admin-link" href={multi ? "/dashboard" : "/admin"}><LockKeyhole size={15} aria-hidden="true" /> <span>{multi ? "Mis negocios" : "Acceso administrador"}</span></Link>
     </div>
   </header>;
 }

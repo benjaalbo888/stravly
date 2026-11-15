@@ -7,6 +7,13 @@ export type Booking = {
 };
 export type Hours = { weekday: number; opens_at: string; closes_at: string; active: boolean };
 export type Block = { id: string; starts_at: string; ends_at: string; reason: string };
-export type Confirmed = { status: "confirmed"; code: string; service: string; startsAt: string; duration: number; price: number };
+export type Confirmed = { status: "confirmed"; code: string; service: string; worker?: string; startsAt: string; duration: number; price: number };
 export type BookingState = { error?: string; retrySlots?: boolean; confirmed?: Confirmed };
-export type FormState = { error?: string; success?: string };
+export type FormState = { error?: string; success?: string; inviteToken?: string };
+
+export type Business = {
+  id: string; slug: string; name: string; description: string; category: string;
+  location: string; phone: string; email: string; time_zone: string;
+};
+export type Worker = { id: number; name: string; description: string; photo_url: string; active: boolean };
+export type Catalog = { business: Omit<Business, "id">; services: Service[]; workers: (Worker & { services: string[] })[] };

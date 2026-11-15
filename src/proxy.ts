@@ -3,6 +3,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { publicConfig, sessionCookie } from "@/lib/supabase/env";
 
 export async function proxy(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
+  if (multi) {
+    if (path === "/reservar") return NextResponse.redirect(new URL("/b/estudio-norte", request.url));
+    if (path === "/admin/login") return NextResponse.redirect(new URL("/login", request.url));
+    if (path === "/admin" || path.startsWith("/admin/")) return NextResponse.redirect(new URL("/dashboard", request.url));
+  } else if (!path.startsWith("/admin") && path !== "/reservar") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
   let response = NextResponse.next({ request });
   const config = publicConfig();
   if (!config) return response;
@@ -27,4 +36,4 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 
-export const config = { matcher: ["/admin/:path*"] };
+export const config = { matcher: ["/admin/:path*", "/reservar", "/b/:path*", "/dashboard/:path*", "/crear-negocio", "/login", "/registro", "/confirmar", "/invitacion"] };

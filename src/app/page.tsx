@@ -32,6 +32,7 @@ function CalendarPreview() {
 }
 
 export default function Home() {
+  const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
   return <>
     <Header />
     <main id="contenido">
@@ -40,10 +41,10 @@ export default function Home() {
           <div className="hero-copy">
             <span className="eyebrow hero-pill"><i /> RESERVAS ONLINE</span>
             <h1>Tus reservas,<br className="desktop-break" /> <span>sin complicaciones.</span></h1>
-            <p>Elige un servicio, encuentra el horario que más te acomode y confirma tu cita en minutos.</p>
+            <p>{multi ? "Administra tu equipo y comparte una agenda de reservas propia para cada negocio." : "Elige un servicio, encuentra el horario que más te acomode y confirma tu cita en minutos."}</p>
             <div className="hero-actions">
-              <Link className="button button-primary" href="/reservar">Reservar una cita <ArrowRight size={18} /></Link>
-              <Link className="button button-quiet" href="#como-funciona">Cómo funciona</Link>
+              <Link className="button button-primary" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear mi negocio" : "Reservar una cita"} <ArrowRight size={18} /></Link>
+              <Link className="button button-quiet" href={multi ? "/b/estudio-norte" : "#como-funciona"}>{multi ? "Ver la demo" : "Cómo funciona"}</Link>
             </div>
             <div className="hero-note"><Check size={15} aria-hidden="true"/> No necesitas crear una cuenta</div>
           </div>
