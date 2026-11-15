@@ -14,7 +14,7 @@ const appointments = [
 
 function AgendaExample() {
   return <figure className="team-preview hero__media" data-visual aria-label="Agenda de ejemplo con las citas de dos profesionales de Barbería Demo">
-    <div className="team-frame app-frame">
+    <div className="team-frame app-frame" data-ui>
       <div className="team-frame-header">
         <div className="team-frame-title"><span className="team-frame-mark"><CalendarDays size={18} aria-hidden="true" /></span>
           <div><strong>Barbería Demo</strong><span>Agenda semanal</span></div></div>
@@ -53,7 +53,7 @@ export default function Home() {
     <main id="contenido" className="landing">
       <section className="hero" data-enter>
         <div className="shell wrap hero-layout">
-          <div className="hero-copy">
+          <div className="hero-copy hero-text">
             <h1>{multi ? <>Tu agenda. <em>A tu ritmo.</em></> : "Tus reservas, sin complicaciones."}</h1>
             <div className="hero-side">
               <p className="hero__lead">{multi ? "Reúne las agendas de tu equipo y recibe reservas desde un solo enlace." : "Elige un servicio, encuentra un horario libre y confirma tu cita en minutos."}</p>

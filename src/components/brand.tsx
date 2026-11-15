@@ -12,7 +12,7 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
 export function Header() {
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
   return <header className="site-header nav">
-    <div className="shell nav-row">
+    <div className="shell wrap nav-row">
       <Brand />
       <nav aria-label="Navegación principal" className="main-nav">
         <Link href="/">Inicio</Link><Link href="/#como-funciona">Cómo funciona</Link>
@@ -27,8 +27,8 @@ export function Header() {
 export function Footer() {
   const repo = process.env.STRAVLY_GITHUB_URL;
   const repoUrl = repo && /^https:\/\/github\.com\/[\w.-]+\/stravly\/?$/i.test(repo) ? repo : "https://github.com/benjaalbo888/stravly";
-  return <footer className="site-footer">
-    <div className="shell footer-row"><Brand /><p>Agenda para negocios con citas</p>
+  return <footer className="site-footer closing">
+    <div className="shell wrap footer-row"><Brand /><p>Agenda para negocios con citas</p>
       <div className="footer-links">
         <a href={repoUrl} rel="noopener noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>
