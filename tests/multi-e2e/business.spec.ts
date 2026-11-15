@@ -1,4 +1,5 @@
 import { devices, expect, test, type Page } from "@playwright/test";
+import { capture } from "./capture";
 import { randomUUID } from "node:crypto";
 import { addDays, santiagoDate } from "../../src/lib/schedule";
 
@@ -102,7 +103,7 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
     for (const card of await owner.getByTestId("worker-card").all()) {
       if (await card.getAttribute("open") !== null) await card.locator("summary").first().click();
     }
-    await owner.screenshot({path:"test-results/multi-trabajadores.png", fullPage:true, animations:"disabled"});
+    await capture(owner, "multi-trabajadores");
   }
   const second = await onboard(other,slugB,"Barbería Norte");
   await service(other,"Corte Norte");
@@ -114,7 +115,7 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
 
   await prepare(client,slugA,"Corte Central","Profesional Uno");
   expect(await client.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(client.viewportSize()!.width);
-  if (captures) await client.screenshot({path:"test-results/multi-reserva-movil.png", fullPage:true});
+  if (captures) await capture(client, "multi-reserva-movil");
   await prepare(contender,slugA,"Corte Central","Profesional Uno");
   await Promise.all([client,contender].map(page => page.getByRole("button",{name:"Confirmar reserva"}).click()));
   const outcomes = await Promise.all([client,contender].map(async page => {
@@ -131,12 +132,12 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
   await owner.goto(`${first}?fecha=${tomorrow}&vista=semana`);
   await expect(owner.getByRole("row").filter({hasText:"Corte Central"})).toHaveCount(2);
   await expect(owner.getByText("Corte Norte",{exact:true})).toHaveCount(0);
-  if (captures) await owner.screenshot({path:"test-results/multi-agenda.png", fullPage:true});
+  if (captures) await capture(owner, "multi-agenda");
   for (const [width, height] of [[768, 1024], [390, 844]]) {
     await owner.setViewportSize({ width, height });
     expect(await owner.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     await expect(owner.getByRole("region", { name: "Detalle de las reservas" })).toBeVisible();
-    if (captures) await owner.screenshot({ path: `test-results/multi-agenda-${width}.png`, fullPage: true, animations: "disabled" });
+    if (captures) await capture(owner, `multi-agenda-${width}`);
   }
   await owner.setViewportSize({ width: 1440, height: 1000 });
 

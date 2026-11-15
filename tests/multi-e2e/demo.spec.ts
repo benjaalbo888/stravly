@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { capture } from "./capture";
 
 const captures = process.env.STRAVLY_CAPTURE_MULTI === "1";
 
@@ -12,7 +13,7 @@ test("the public demo shows availability and simulates a booking without contact
     await page.setViewportSize({ width, height });
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
     await expect(page.getByRole("link", { name: "Probar demo" })).toBeInViewport();
-    if (captures) await page.screenshot({ path: width === 1440 ? "test-results/multi-portada.png" : `test-results/multi-portada-${width}.png`, fullPage: true, animations: "disabled" });
+    if (captures) await capture(page, width === 1440 ? "multi-portada" : `multi-portada-${width}`);
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("link", { name: "Probar demo" }).click();
@@ -30,11 +31,11 @@ test("the public demo shows availability and simulates a booking without contact
   await availability.getByRole("radio", { name: "11:00", exact: true }).check();
   await expect(availability.getByRole("radio", { name: "10:00", exact: true })).toHaveCount(0);
   await expect(availability.getByRole("radio", { name: "18:30", exact: true })).toHaveCount(0);
-  if (captures) await page.screenshot({ path: "test-results/multi-demo-reserva.png", fullPage: true, animations: "disabled" });
+  if (captures) await capture(page, "multi-demo-reserva");
 
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
-  if (captures) await page.screenshot({ path: "test-results/multi-demo-movil.png", fullPage: true, animations: "disabled" });
+  if (captures) await capture(page, "multi-demo-movil");
   await page.getByRole("button", { name: "Confirmar reserva de prueba" }).click();
   const confirmation = page.getByRole("heading", { name: "¡Reserva de prueba confirmada!" });
   await expect(confirmation).toBeFocused();
