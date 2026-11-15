@@ -4,12 +4,12 @@
 
 1. Crea un proyecto nuevo dedicado a Stravly en [Supabase](https://supabase.com/dashboard). Mantén habilitada **Data API** y desactiva **Automatically expose new tables** para usar únicamente los permisos explícitos de la migración. Completa la migración, desactiva el registro público y prepara el primer administrador siguiendo el [README](../README.md).
 2. En PowerShell, ejecuta `npx --yes vercel login` y completa la autorización del dispositivo en el navegador oficial de Vercel.
-3. En la cuenta correcta, comprueba que el nombre `stravly` esté libre. Crea un proyecto **nuevo** con `npx --yes vercel project add stravly` y vincula esta carpeta con `npx --yes vercel link --project stravly`. Si el nombre ya existe, revisa su origen antes de usarlo.
+3. En la cuenta correcta, comprueba que el nombre `stravly` esté libre. Crea un proyecto **nuevo** con `npx --yes vercel project create stravly` y vincula esta carpeta con `npx --yes vercel link --project stravly`. `vercel.json` fija el framework en Next.js. Si el nombre ya existe, revisa su origen antes de usarlo.
 4. En **Settings → Environment Variables** del proyecto, configura `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY` en **Preview** y **Production**. Marca la clave secreta como sensible. Si tienes un segundo proyecto de Supabase para pruebas, usa sus valores en **Preview**. Conserva las variables de sistema de Vercel habilitadas para el límite por IP; localmente, el límite se comparte entre las solicitudes de prueba.
 
 ## Verificación antes de producción
 
-1. Ejecuta `npx --yes vercel deploy` para obtener una URL de Preview.
+1. Ejecuta `npx --yes vercel deploy --environment preview` para obtener una URL de Preview. Indica el entorno explícitamente, ya que la CLI puede elegir producción en el primer despliegue de un proyecto nuevo.
 2. En la vista previa, reserva con datos ficticios. Guarda el código y comprueba que el intervalo ya no aparece libre. Si estás probando en dos ventanas, prepara dos reservas para la misma hora antes de enviarlas: debe quedar confirmada solo una.
 3. En una ventana sin sesión, comprueba que `/admin` redirige a `/admin/login`. Inicia sesión con la cuenta autorizada y comprueba el código en la agenda. Cancela la cita y verifica que el horario vuelve a quedar libre.
 4. Crea un servicio de prueba, edítalo y desactívalo. Modifica el horario de un día y crea y quita un bloqueo. Comprueba el efecto en `/reservar` y restaura los ajustes de la demostración. Cierra sesión y comprueba que `/admin` vuelve a quedar protegido.
