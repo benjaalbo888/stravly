@@ -2,6 +2,8 @@
 
 **Tu tiempo, mejor organizado.** Stravly es una aplicación de reservas online para una barbería de demostración. Los clientes pueden reservar sin crear una cuenta. El negocio mantiene una sola agenda desde un panel privado.
 
+[Abrir la demo de Stravly](https://stravly.vercel.app/)
+
 ## Qué puedes hacer
 
 - **Reservar:** elige un servicio, consulta su duración y precio en pesos chilenos, selecciona un horario libre y recibe un código de confirmación.
@@ -12,13 +14,13 @@ La agenda usa la zona horaria `America/Santiago`. Cada servicio consume un inter
 
 ## Tecnologías
 
-Next.js App Router, React, TypeScript, Tailwind CSS, Lucide, Supabase Auth y PostgreSQL. El proyecto está preparado para Vercel. Las pruebas usan Node.js, PGlite, PostgreSQL y Playwright.
+Next.js App Router, React, TypeScript, Tailwind CSS, Lucide, Supabase Auth y PostgreSQL. La demo se ejecuta en Vercel. Las pruebas usan Node.js, PGlite, PostgreSQL y Playwright.
 
 ## Capturas
 
 ![Portada de Stravly con acceso a la reserva y una vista del calendario](docs/capturas/inicio-escritorio.png)
 
-[Portada en móvil](docs/capturas/inicio-movil.png) · [Formulario de reserva con horarios libres](docs/capturas/reserva-escritorio.png)
+[Portada en móvil](docs/capturas/inicio-movil.png) · [Formulario de reserva con horarios libres](docs/capturas/reserva-escritorio.png) · [Agenda con una cita ficticia](docs/capturas/agenda-escritorio.png)
 
 ## Ejecutar en local
 
@@ -84,4 +86,4 @@ npm run test:e2e
 
 MVP para un solo negocio. La confirmación se muestra en pantalla. Un siguiente paso sería añadir recordatorios, permitir reprogramar una cita con un enlace privado y definir un plazo de conservación de datos antes de usar Stravly con clientes reales.
 
-El flujo público de reserva se verificó contra un proyecto real de Supabase, incluida la competencia de dos clientes por la misma hora. La demo de Vercel está pendiente. Consulta la [guía de despliegue y verificación](docs/despliegue.md).
+El flujo público y el acceso al panel se verificaron contra Supabase en Vercel. Las pruebas incluyen dos clientes que reservan la misma hora, la cancelación desde el panel y la recuperación del horario. [Guía de despliegue y verificación](docs/despliegue.md).
