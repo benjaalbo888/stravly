@@ -1,4 +1,5 @@
 import { addDays, BOOKING_DAYS, santiagoDate } from "@/lib/schedule";
+import { demoAvailability } from "@/lib/demo";
 import { dataClient } from "@/lib/supabase/server";
 import { isDate, isSlug, isUuid, workerId } from "@/lib/validation";
 
@@ -10,6 +11,10 @@ export async function GET(request: Request) {
   const worker = params.get("profesional") ?? "any";
   const today = santiagoDate();
   const headers = { "Cache-Control": "no-store" };
+  if (params.get("demo") === "1") {
+    if (slug !== null) return Response.json({ error: "La demo tiene su propia agenda." }, { status: 400, headers });
+    return Response.json({ slots: [...demoAvailability(service, worker, date).keys()].sort() }, { headers });
+  }
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
   if ((slug !== null) !== multi || !isUuid(service) || !isDate(date) || date < today || date > addDays(today, BOOKING_DAYS) ||
       (slug !== null && (!isSlug(slug) || (worker !== "any" && workerId(worker) === null)))) {

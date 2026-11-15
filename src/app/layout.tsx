@@ -5,9 +5,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Stravly · Reservas online", template: "%s · Stravly" },
-  description: "Elige un servicio, encuentra un horario disponible y reserva una cita en pocos pasos.",
+  description: "Agenda online para barberías y otros negocios. Gestiona los horarios de tu equipo y recibe citas desde tu propio enlace.",
   applicationName: "Stravly",
-  openGraph: { title: "Stravly · Reservas online", description: "Tu tiempo, mejor organizado.", locale: "es_CL", type: "website" },
+  openGraph: { title: "Stravly · Reservas online", description: "Organiza las agendas de tu equipo y ofrece reservas online desde un enlace.", locale: "es_CL", type: "website" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

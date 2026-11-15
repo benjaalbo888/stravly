@@ -16,6 +16,7 @@ export function Header() {
       <Brand />
       <nav aria-label="Navegación principal" className="main-nav">
         <Link href="/">Inicio</Link><Link href="/#como-funciona">Cómo funciona</Link>
+        <Link href="/demo">Demo</Link>
         {demoBookingEnabled() && <Link href="/reservar">Reservar</Link>}
       </nav>
       <Link className="admin-link" href={multi ? "/dashboard" : "/admin"}><LockKeyhole size={15} aria-hidden="true" /> <span>{multi ? "Mis negocios" : "Acceso administrador"}</span></Link>
@@ -27,9 +28,8 @@ export function Footer() {
   const repo = process.env.STRAVLY_GITHUB_URL;
   const repoUrl = repo && /^https:\/\/github\.com\/[\w.-]+\/stravly\/?$/i.test(repo) ? repo : "https://github.com/benjaalbo888/stravly";
   return <footer className="site-footer">
-    <div className="shell footer-row"><Brand /><p>Tu tiempo, mejor organizado.</p>
+    <div className="shell footer-row"><Brand /><p>Reservas online</p>
       <div className="footer-links">
-        <span>Proyecto de portafolio</span>
         <a href={repoUrl} rel="noopener noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>
     </div>

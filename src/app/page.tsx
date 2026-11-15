@@ -1,71 +1,81 @@
 import Link from "next/link";
-import { ArrowRight, CalendarCheck2, CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, MousePointer2 } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, Clock3, Link2, UsersRound } from "lucide-react";
 import { Footer, Header } from "@/components/brand";
-import { demoBookingEnabled } from "@/lib/supabase/env";
 
-const benefits = [
-  { icon: MousePointer2, title: "Reserva en pocos pasos", text: "Elige el servicio que necesitas y confirma tu cita desde cualquier dispositivo." },
-  { icon: Clock3, title: "Horarios en tiempo real", text: "Consulta qué horas están libres antes de confirmar tu reserva." },
-  { icon: CalendarCheck2, title: "Tu cita, organizada", text: "Recibe un código de confirmación y guarda los detalles en un solo lugar." },
-];
-const steps = [
-  { title: "Selecciona un servicio", text: "Compara las opciones, su duración y su precio." },
-  { title: "Elige fecha y hora", text: "Encuentra un espacio que encaje en tu agenda." },
-  { title: "Confirma tu reserva", text: "Deja tus datos y obtén tu código de reserva." },
+const ownerFeatures = [
+  { icon: Link2, title: "Tu enlace de reservas", text: "Comparte tu página por WhatsApp o en redes. Tus clientes eligen un servicio y reservan desde el teléfono." },
+  { icon: UsersRound, title: "Una agenda por profesional", text: "Configura qué servicios realiza cada persona, sus horarios y los días que debe bloquear." },
+  { icon: CalendarDays, title: "Todo el equipo en un calendario", text: "Consulta las citas por día, semana o profesional desde el panel del negocio." },
 ];
 
-function CalendarPreview() {
-  return <figure className="calendar-visual" aria-label="Ilustración del calendario y los horarios de reserva">
-    <div className="preview-details" aria-hidden="true">
-      <div className="preview-line"><span><CalendarDays size={15} /> Disponibilidad</span><span className="preview-tag"><i /> Agenda online</span></div>
-      <div className="preview-calendar">
-        <div className="preview-month"><strong>Junio 2026</strong><span><ChevronLeft size={14}/><ChevronRight size={14}/></span></div>
-        <div className="preview-grid">
-          {["L", "M", "M", "J", "V", "S", "D"].map((day, i) => <span className="preview-weekday" key={i}>{day}</span>)}
-          {Array.from({ length: 21 }, (_, i) => i + 1).map((day) => <span className={day === 12 ? "preview-selected" : day > 15 ? "preview-muted" : ""} key={day}>{day}</span>)}
-        </div>
-      </div>
-      <div className="preview-times"><span><Clock3 size={14}/> Horarios</span><div><i>10:00</i><i>11:30</i><i>15:00</i></div></div>
+const clientFeatures = [
+  { icon: Link2, title: "Reserva desde tu teléfono", text: "Elige el servicio que necesitas desde el enlace del negocio." },
+  { icon: Clock3, title: "Consulta los horarios", text: "Ve la disponibilidad antes de confirmar tu cita." },
+  { icon: CalendarDays, title: "Guarda tu confirmación", text: "Recibe un código y los detalles de tu reserva." },
+];
+
+function AgendaExample() {
+  const days = ["Martes", "Miércoles", "Jueves"];
+  const events = [
+    { day: "Martes", time: "10:00", service: "Corte de pelo", person: "Camila", tone: "green" },
+    { day: "Miércoles", time: "11:00", service: "Corte y barba", person: "Martín", tone: "blue" },
+    { day: "Jueves", time: "10:00", service: "Perfilado de barba", person: "Camila", tone: "green" },
+    { day: "Jueves", time: "12:00", service: "Corte de pelo", person: "Martín", tone: "blue" },
+  ];
+
+  return <figure className="hero-agenda" aria-label="Vista de ejemplo de la agenda de Barbería Demo">
+    <div className="hero-agenda-bar">
+      <div className="hero-agenda-business"><span className="hero-agenda-icon"><CalendarDays aria-hidden="true" size={21} /></span>
+        <div><strong>Barbería Demo</strong><small>Agenda semanal</small></div></div>
+      <span className="hero-agenda-caption">Vista de ejemplo</span>
     </div>
-    <div className="preview-confirmed" aria-hidden="true"><span className="preview-check"><Check size={19}/></span><div><strong>¡Cita confirmada!</strong><small>Viernes, 12 de junio · 11:30</small></div></div>
-    <figcaption>Vista de ejemplo</figcaption>
+    <div className="hero-agenda-grid" aria-hidden="true">
+      <span className="hero-agenda-spacer" />
+      {days.map((day) => <strong className="hero-agenda-day" key={day}>{day}</strong>)}
+      {["10:00", "11:00", "12:00"].map((time) => <div className="hero-agenda-row" key={time}>
+        <span className="hero-agenda-time">{time}</span>
+        {days.map((day) => {
+          const event = events.find((item) => item.day === day && item.time === time);
+          return <div className="hero-agenda-cell" key={day}>{event && <div className={`hero-agenda-event ${event.tone}`}><strong>{event.service}</strong><small>{event.person}</small></div>}</div>;
+        })}
+      </div>)}
+    </div>
+    <div className="hero-agenda-footer"><span><span className="agenda-dot" /> Camila Ríos</span><span><span className="agenda-dot blue" /> Martín Vega</span></div>
   </figure>;
 }
 
 export default function Home() {
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
-  const showDemo = multi && demoBookingEnabled();
+  const features = multi ? ownerFeatures : clientFeatures;
+
   return <>
     <Header />
     <main id="contenido">
       <section className="hero">
         <div className="shell hero-layout">
           <div className="hero-copy">
-            <span className="eyebrow hero-pill"><i /> RESERVAS ONLINE</span>
-            <h1>Tus reservas,<br className="desktop-break" /> <span>sin complicaciones.</span></h1>
-            <p>{multi ? "Administra tu equipo y comparte una agenda de reservas propia para cada negocio." : "Elige un servicio, encuentra el horario que más te acomode y confirma tu cita en minutos."}</p>
+            <p className="eyebrow">{multi ? "AGENDA ONLINE PARA NEGOCIOS" : "RESERVAS ONLINE"}</p>
+            <h1>{multi ? <>Tu agenda.<br /><span>A tu ritmo.</span></> : "Tus reservas, sin complicaciones."}</h1>
+            <p>{multi ? "Organiza los horarios de tu equipo y recibe reservas desde tu propio enlace." : "Elige un servicio, encuentra un horario libre y confirma tu cita en minutos."}</p>
             <div className="hero-actions">
-              <Link className="button button-primary" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear mi negocio" : "Reservar una cita"} <ArrowRight size={18} /></Link>
-              <Link className="button button-quiet" href={showDemo ? "/reservar" : "#como-funciona"}>{showDemo ? "Ver la demo" : "Cómo funciona"}</Link>
+              <Link className="button button-primary" href={multi ? "/demo" : "/reservar"}>{multi ? "Probar demo" : "Reservar una cita"} <ArrowRight size={17} aria-hidden="true" /></Link>
+              <Link className="button button-quiet" href={multi ? "/registro" : "/demo"}>{multi ? "Crear mi negocio" : "Probar demo"}</Link>
             </div>
-            <div className="hero-note"><Check size={15} aria-hidden="true"/> {multi ? "Tus clientes reservan sin crear una cuenta" : "No necesitas crear una cuenta"}</div>
+            <p className="hero-note"><Check size={15} aria-hidden="true" /> La demo no requiere registro</p>
           </div>
-          <CalendarPreview />
+          <AgendaExample />
         </div>
       </section>
-      <section className="section shell" aria-labelledby="beneficios">
-        <div className="section-intro"><p className="eyebrow">DISEÑADO PARA TU DÍA A DÍA</p><h2 id="beneficios">Menos vueltas, más tiempo.</h2><p>Todo lo que necesitas para reservar, en un solo lugar.</p></div>
+      <section className="section shell" id="como-funciona" aria-labelledby="ventajas">
+        <div className="section-intro"><h2 id="ventajas">{multi ? "Así funciona Stravly" : "Tu próxima cita en línea"}</h2>
+          <p>{multi ? "Configura tu equipo, publica el enlace y gestiona las citas desde el panel." : "Elige un servicio, encuentra un horario y guarda tu confirmación."}</p></div>
         <div className="feature-grid">
-          {benefits.map(({ icon: Icon, title, text }) => <article className="feature-card" key={title}><span className="feature-icon"><Icon size={23} aria-hidden="true" /></span><h3>{title}</h3><p>{text}</p></article>)}
+          {features.map(({ icon: Icon, title, text }) => <article className="feature-card" key={title}>
+            <span className="feature-icon"><Icon size={22} aria-hidden="true" /></span><h3>{title}</h3><p>{text}</p>
+          </article>)}
         </div>
-      </section>
-      <section className="steps-section" id="como-funciona">
-        <div className="section shell">
-          <div className="section-intro"><p className="eyebrow">CÓMO FUNCIONA</p><h2>Tres pasos y tu cita es tuya.</h2></div>
-          <ol className="steps-grid">
-            {steps.map(({ title, text }, i) => <li key={title}><span className="step-number">0{i + 1}</span><h3>{title}</h3><p>{text}</p></li>)}
-          </ol>
-          <div className="cta-banner"><div><p className="eyebrow">{multi ? "TU NEGOCIO" : "TU PRÓXIMA CITA"}</p><h2>{multi ? "Comparte tu propia agenda." : "Reserva cuando quieras."}</h2></div><Link className="button button-light" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear mi negocio" : "Ver servicios"} <ArrowRight size={18}/></Link></div>
+        <div className="cta-banner"><div><h2>{multi ? "Abre tu agenda a nuevas reservas" : "Elige tu próximo horario"}</h2></div>
+          <Link className="button button-light" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear cuenta" : "Ver servicios"} <ArrowRight size={17} aria-hidden="true" /></Link>
         </div>
       </section>
     </main>

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { CalendarDays } from "lucide-react";
 import { Footer, Header } from "@/components/brand";
 import { dataClient } from "@/lib/supabase/server";
 import { bookingConfig } from "@/lib/supabase/env";
@@ -17,12 +18,15 @@ export default async function PublicBusiness({ params }: { params: Promise<{ slu
   if (result && !result.error && !catalog) notFound();
   const today = santiagoDate();
   const business = catalog?.business;
-  return <><Header /><main id="contenido" className="workspace"><div className="shell stack">
-    <div className="page-intro">
+  return <><Header /><main id="contenido" className="workspace booking-workspace"><div className="shell stack">
+    <div className="booking-masthead">
+      <span className="booking-emblem" aria-hidden="true"><CalendarDays size={27} /></span>
+      <div>
       <p className="eyebrow">{business?.category ?? "RESERVAS ONLINE"}</p>
       <h1>{business?.name ?? "Agenda del negocio"}</h1>
       <p>{business?.description || "Elige un servicio, un profesional y un horario."}</p>
       {business && <p>{[business.location, business.phone, business.email].filter(Boolean).join(" · ")}</p>}
+      </div>
     </div>
     {!catalog || !bookingConfig() ? <p className="notice">La agenda no está disponible en este momento.</p>
       : !catalog.services.length ? <p className="notice">Este negocio todavía no tiene servicios disponibles.</p>

@@ -1,12 +1,23 @@
 "use server";
 
-import { createHmac } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 import { isIP } from "node:net";
 import { headers } from "next/headers";
+import { demoAvailability, demoServices } from "@/lib/demo";
 import { bookingConfig } from "@/lib/supabase/env";
 import { dataClient } from "@/lib/supabase/server";
 import { bookingInput, field, isSlug, workerId } from "@/lib/validation";
 import type { BookingState } from "@/lib/models";
+
+export async function reserveDemo(form: FormData): Promise<BookingState> {
+  const serviceId = field(form, "service");
+  const startsAt = field(form, "start");
+  const service = demoServices.find(({ id }) => id === serviceId);
+  const worker = demoAvailability(serviceId, field(form, "worker"), field(form, "date")).get(startsAt);
+  if (!service || !worker) return { error: "Elige un horario disponible de la demo.", retrySlots: true };
+  return { confirmed: { status: "confirmed", code: `DEMO-${randomBytes(4).toString("hex").toUpperCase()}`,
+    service: service.name, worker, startsAt, duration: service.duration_minutes, price: service.price_clp } };
+}
 
 export async function reserve(slug: string | null, _: BookingState, form: FormData): Promise<BookingState> {
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";

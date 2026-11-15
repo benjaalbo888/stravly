@@ -112,8 +112,8 @@ async function Agenda({ client,id,query,workers,workerName }: { client: Client; 
       </div>}
       <h3>{view === "proximas" ? "Próximas reservas" : view === "semana" ? `${dateLabel(date)} a ${dateLabel(addDays(date,6))}` : dateLabel(date,true)}</h3>
       {appointmentResult.error && appointmentResult.error.code !== "PGRST103" ? <p className="notice error">No pudimos cargar las reservas.</p>
-        : !rows.length ? <p className="muted">No hay citas en esta vista.</p>
-        : <div className="overflow-x-auto" tabIndex={0} aria-label="Detalle de las reservas">
+        : !rows.length ? <div className="empty-state"><strong>No hay citas en esta vista.</strong><p>Elige otra fecha o revisa el filtro de profesionales.</p></div>
+        : <div className="table-scroll" tabIndex={0} role="region" aria-label="Detalle de las reservas">
           <table><thead><tr><th scope="col">Fecha y hora</th><th scope="col">Servicio y profesional</th><th scope="col">Cliente</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
             <tbody>{rows.map((row) => <tr key={row.id}>
               <td>{dateLabel(santiagoDate(new Date(row.starts_at)))}<br />{timeLabel(row.starts_at)}–{timeLabel(row.ends_at)}</td>

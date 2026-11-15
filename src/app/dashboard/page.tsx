@@ -17,7 +17,7 @@ export default async function Dashboard() {
       <form action={accountLogout}><button className="button button-quiet">Cerrar sesión</button></form>
     </div>
     {error ? <p className="notice error" role="alert">No se pudieron cargar tus negocios.</p>
-      : !businesses.length ? <p className="notice">Todavía no tienes negocios asociados a esta cuenta.</p>
+      : !businesses.length ? <div className="empty-state"><strong>Todavía no tienes negocios</strong><p>Crea un negocio para configurar los horarios de tu equipo y compartir su enlace de reservas.</p></div>
       : <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{businesses.map((business) => <article key={business.id} className="card stack">
         <p className="eyebrow">{business.category}</p><h2>{business.name}</h2>
         <Link className="button button-primary w-fit" href={`/dashboard/${business.id}`}>Abrir panel</Link>
