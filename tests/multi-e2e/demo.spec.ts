@@ -5,7 +5,7 @@ const captures = process.env.STRAVLY_CAPTURE_MULTI === "1";
 test("the public demo shows availability and simulates a booking without contact data", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.getByRole("link", { name: "Probar demo" })).toHaveAttribute("href", "/demo");
-  if (captures) await page.screenshot({ path: "test-results/multi-portada.png", animations: "disabled" });
+  if (captures) await page.screenshot({ path: "test-results/multi-portada.png", fullPage: true, animations: "disabled" });
   await page.getByRole("link", { name: "Probar demo" }).click();
   await expect(page.getByRole("heading", { name: "Barbería Demo" })).toBeVisible();
   await expect(page.getByLabel("Correo electrónico")).toHaveCount(0);

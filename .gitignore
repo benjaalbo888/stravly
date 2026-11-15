@@ -18,6 +18,7 @@ playwright-report/
 *.key
 *.pfx
 *.dump
+*.dpapi
 *.sqlite*
 .DS_Store
 Thumbs.db

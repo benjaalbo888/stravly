@@ -9,7 +9,7 @@ export default defineConfig({
   workers: 1,
   timeout: 150_000,
   expect: { timeout: 12_000 },
-  use: { baseURL: app, viewport: { width: 1440, height: 1000 }, trace: "off", actionTimeout: 12_000, navigationTimeout: 20_000 },
+  use: { baseURL: app, locale: "es-CL", viewport: { width: 1440, height: 1000 }, trace: "off", actionTimeout: 12_000, navigationTimeout: 20_000 },
   webServer: {
     command: "npm run start -- --hostname 127.0.0.1 --port 3141", url: app, timeout: 45_000,
     env: { STRAVLY_MULTI_BUSINESS: "1", NEXT_TELEMETRY_DISABLED: "1" },

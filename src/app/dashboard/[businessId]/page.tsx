@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { ChevronDown, UserRound } from "lucide-react";
 import { Footer, Header } from "@/components/brand";
 import { authenticatedClient } from "@/lib/supabase/server";
 import type { Block, Booking, Business, Hours, Service, Worker } from "@/lib/models";
@@ -155,7 +156,9 @@ async function WorkersPanel({ client,id,workers }: { client: Client; id: string;
       <AdminForm action={editWorker.bind(null,id)} submit="Añadir profesional"><WorkerFields /></AdminForm></section>
     <section className="card stack"><h2>Equipo</h2>
       {workers.map((worker) => <details key={worker.id} className="admin-detail" data-testid="worker-card">
-        <summary>{worker.name} {worker.active ? "" : "(inactivo)"}</summary>
+        <summary className="worker-summary"><span className="person-avatar" aria-hidden="true"><UserRound size={17} /></span>
+          <strong className="worker-name">{worker.name}</strong><span className={`badge ${worker.active ? "" : "inactive"}`}>{worker.active ? "Activo" : "Inactivo"}</span>
+          <ChevronDown size={16} aria-hidden="true" /></summary>
         <div className="stack mt-4">
           <AdminForm action={editWorker.bind(null,id)} submit="Guardar profesional"><WorkerFields item={worker} /></AdminForm>
           <h3>Servicios que realiza</h3>

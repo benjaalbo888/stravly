@@ -98,7 +98,12 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
   await expect(owner.getByText(/Profesional guardado/)).toBeVisible();
   await setupWorker(owner,"Profesional Uno","Corte Central");
   await setupWorker(owner,"Profesional Dos","Corte Central",true);
-  if (captures) await owner.screenshot({path:"test-results/multi-trabajadores.png", fullPage:true});
+  if (captures) {
+    for (const card of await owner.getByTestId("worker-card").all()) {
+      if (await card.getAttribute("open") !== null) await card.locator("summary").first().click();
+    }
+    await owner.screenshot({path:"test-results/multi-trabajadores.png", fullPage:true, animations:"disabled"});
+  }
   const second = await onboard(other,slugB,"Barbería Norte");
   await service(other,"Corte Norte");
   await other.getByRole("link",{name:"Trabajadores",exact:true}).click();
