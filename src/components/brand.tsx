@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ArrowUpRight, CalendarCheck2, LockKeyhole } from "lucide-react";
+import { ArrowUpRight, CalendarRange, LockKeyhole } from "lucide-react";
 import { demoBookingEnabled } from "@/lib/supabase/env";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   return <Link href="/" className={`brand ${inverse ? "brand-inverse" : ""}`} aria-label="Stravly, inicio">
-    <span className="brand-mark"><CalendarCheck2 size={20} aria-hidden="true" strokeWidth={2.3} /></span>
+    <span className="brand-mark"><CalendarRange size={18} aria-hidden="true" strokeWidth={2.1} /></span>
     <span>stravly<span className="brand-dot">.</span></span>
   </Link>;
 }
@@ -28,7 +28,7 @@ export function Footer() {
   const repo = process.env.STRAVLY_GITHUB_URL;
   const repoUrl = repo && /^https:\/\/github\.com\/[\w.-]+\/stravly\/?$/i.test(repo) ? repo : "https://github.com/benjaalbo888/stravly";
   return <footer className="site-footer">
-    <div className="shell footer-row"><Brand /><p>Reservas online</p>
+    <div className="shell footer-row"><Brand /><p>Agenda para negocios con citas</p>
       <div className="footer-links">
         <a href={repoUrl} rel="noopener noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>

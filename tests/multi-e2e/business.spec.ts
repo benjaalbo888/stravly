@@ -132,6 +132,13 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
   await expect(owner.getByRole("row").filter({hasText:"Corte Central"})).toHaveCount(2);
   await expect(owner.getByText("Corte Norte",{exact:true})).toHaveCount(0);
   if (captures) await owner.screenshot({path:"test-results/multi-agenda.png", fullPage:true});
+  for (const [width, height] of [[768, 1024], [390, 844]]) {
+    await owner.setViewportSize({ width, height });
+    expect(await owner.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    await expect(owner.getByRole("region", { name: "Detalle de las reservas" })).toBeVisible();
+    if (captures) await owner.screenshot({ path: `test-results/multi-agenda-${width}.png`, fullPage: true, animations: "disabled" });
+  }
+  await owner.setViewportSize({ width: 1440, height: 1000 });
 
   await owner.goto(`${first}?tab=administradores`);
   await owner.getByLabel("Correo de la persona invitada").fill(`norte-${suffix}@example.test`);

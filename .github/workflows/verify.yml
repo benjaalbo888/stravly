@@ -2,7 +2,7 @@ name: Verificar Stravly
 
 on:
   push:
-    branches: [main, feature/multi-business, chore/portfolio-polish]
+    branches: [main, feature/multi-business, chore/portfolio-polish, design/stravly-visual-upgrade]
   pull_request:
 
 permissions:

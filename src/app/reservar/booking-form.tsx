@@ -78,7 +78,7 @@ function Wizard({ services, today, lastDay, reset, slug, workers, demo = false }
   }
 
   return <form action={action} className="two-columns booking-flow">
-    <fieldset disabled={pending} className="stack min-w-0">
+    <fieldset disabled={pending} className="booking-steps stack min-w-0">
       <legend className="sr-only">Detalles de la cita</legend>
       <section className="card" aria-labelledby="servicio">
         <div className="card-title"><Scissors size={20} aria-hidden="true" /><h2 id="servicio">1. Elige un servicio</h2></div>
@@ -138,7 +138,7 @@ function Wizard({ services, today, lastDay, reset, slug, workers, demo = false }
       </section>}
     </fieldset>
     <aside className="card stack booking-recap" aria-label="Resumen de la cita">
-      <div><p className="eyebrow">TU RESERVA</p><h2 className="mt-1">Detalles de la cita</h2></div>
+      <h2>Detalles de la cita</h2>
       <Recap service={service?.name} date={validDate ? date : undefined} start={slot} duration={service?.duration_minutes} price={service?.price_clp} />
       {state.error && <p className="notice error" role="alert">{state.error}</p>}
       <button className="button button-primary" disabled={pending || !slot || !current?.slots?.includes(slot)}>{pending ? "Confirmando…" : demo ? "Confirmar reserva de prueba" : "Confirmar reserva"}</button>

@@ -41,16 +41,18 @@ export default async function BusinessDashboard({ params, searchParams }: { para
   const { data: workerData, error: workerError } = await client.from("workers").select("id,name,description,photo_url,active").eq("business_id",business.id).order("name");
   const workers = (workerData ?? []) as Worker[];
   const workerName = (id: number | null) => id === null ? "Todo el negocio" : workers.find((worker) => worker.id === id)?.name ?? "Profesional";
-  return <><Header /><main id="contenido" className="workspace"><div className="shell stack">
+  return <><Header /><main id="contenido" className="workspace business-workspace"><div className="shell stack">
     <div className="admin-top">
       <div className="page-intro"><p className="eyebrow">{owner ? "PROPIETARIO" : "ADMINISTRACIÓN"}</p><h1>{business.name}</h1>
         <p>Gestiona el equipo y las reservas de este negocio.</p></div>
       <div className="flex flex-wrap gap-2"><Link className="button button-quiet" href="/dashboard">Mis negocios</Link>
         <Link className="button button-primary" href={`/b/${business.slug}`}>Enlace público</Link></div>
     </div>
-    <nav className="admin-tabs flex flex-wrap" aria-label="Panel del negocio">{tabs.map(([key,label]) =>
-      <Link key={key} className="button button-quiet" href={`${path}?tab=${key}`} aria-current={key===tab?"page":undefined}>{label}</Link>
+    <div className="management-layout">
+    <nav className="management-nav" aria-label="Panel del negocio">{tabs.map(([key,label]) =>
+      <Link key={key} href={`${path}?tab=${key}`} aria-current={key===tab?"page":undefined}>{label}</Link>
     )}</nav>
+    <div className="management-content stack">
     {workerError && <p className="notice error" role="alert">No se pudo cargar el equipo.</p>}
     {tab === "agenda" && <Agenda client={client} id={business.id} query={query} workers={workers} workerName={workerName} />}
     {tab === "trabajadores" && !workerError && <WorkersPanel client={client} id={business.id} workers={workers} />}
@@ -61,6 +63,7 @@ export default async function BusinessDashboard({ params, searchParams }: { para
       <AdminForm action={updateProfile.bind(null,business.id)} submit="Guardar configuración"><ProfileFields business={business} /></AdminForm>
     </section>}
     {tab === "administradores" && owner && <AccessPanel client={client} id={business.id} />}
+    </div></div>
   </div></main><Footer /></>;
 }
 
@@ -96,10 +99,10 @@ async function Agenda({ client,id,query,workers,workerName }: { client: Client; 
   const agendaPath = `/dashboard/${id}`;
   const pathFor = (d: string, n = 1) => `${agendaPath}?fecha=${d}&vista=${view}&profesional=${selected ?? ""}&pagina=${n}`;
   return <>
-    <dl className="stat-grid">{[["Reservas de hoy",stats.today],["Reservas próximas",stats.upcoming],["Total histórico",stats.total]].map(([label,value]) =>
-      <div className="card" key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+    <dl className="stat-grid agenda-stats">{[["Reservas de hoy",stats.today],["Reservas próximas",stats.upcoming],["Total histórico",stats.total]].map(([label,value]) =>
+      <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
     <section className="card stack"><h2>Calendario</h2>
-      <form action={agendaPath} className="flex flex-wrap gap-3 items-end">
+      <form action={agendaPath} className="agenda-filters">
         <label className="field">Filtrar por fecha<input name="fecha" type="date" defaultValue={date} min="2000-01-01" max="2099-12-31" /></label>
         <label className="field">Vista<select name="vista" defaultValue={view}><option value="dia">Diaria</option><option value="semana">Semanal</option><option value="proximas">Próximas</option></select></label>
         <label className="field">Profesional<select name="profesional" defaultValue={selected ?? ""}><option value="">Todos</option>
@@ -114,11 +117,11 @@ async function Agenda({ client,id,query,workers,workerName }: { client: Client; 
       <h3>{view === "proximas" ? "Próximas reservas" : view === "semana" ? `${dateLabel(date)} a ${dateLabel(addDays(date,6))}` : dateLabel(date,true)}</h3>
       {appointmentResult.error && appointmentResult.error.code !== "PGRST103" ? <p className="notice error">No pudimos cargar las reservas.</p>
         : !rows.length ? <div className="empty-state"><strong>No hay citas en esta vista.</strong><p>Elige otra fecha o revisa el filtro de profesionales.</p></div>
-        : <div className="table-scroll" tabIndex={0} role="region" aria-label="Detalle de las reservas">
+        : <div className="table-scroll agenda-table" tabIndex={0} role="region" aria-label="Detalle de las reservas">
           <table><thead><tr><th scope="col">Fecha y hora</th><th scope="col">Servicio y profesional</th><th scope="col">Cliente</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
             <tbody>{rows.map((row) => <tr key={row.id}>
-              <td>{dateLabel(santiagoDate(new Date(row.starts_at)))}<br />{timeLabel(row.starts_at)}–{timeLabel(row.ends_at)}</td>
-              <td>{row.service_name}<br />{workerName(row.worker_id)}<br /><span className="muted">{row.code}</span></td>
+              <td><strong>{timeLabel(row.starts_at)}–{timeLabel(row.ends_at)}</strong><br />{dateLabel(santiagoDate(new Date(row.starts_at)))}</td>
+              <td><strong>{row.service_name}</strong><br />{workerName(row.worker_id)}<br /><span className="muted">{row.code}</span></td>
               <td>{row.customer_name}<br />{row.customer_email}<br />{row.customer_phone}</td>
               <td><span className={`badge ${row.status === "cancelled" ? "inactive" : ""}`}>{row.status === "confirmed" ? "Confirmada" : "Cancelada"}</span></td>
               <td>{row.status === "confirmed" && Date.parse(row.starts_at) > now.valueOf() && <AdminForm compact danger action={cancelAppointment.bind(null,id,row.id)} submit="Cancelar cita" confirm="¿Confirmas la cancelación de esta cita?" />}</td>
