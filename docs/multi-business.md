@@ -14,7 +14,7 @@ GitHub Actions ejecuta el flujo de correo con Mailpit y los servicios oficiales 
 
 ## Migración de Estudio Norte
 
-Para lanzar sin un negocio de demostración, configura `STRAVLY_SHOW_DEMO=0` en el despliegue 2.0 y omite la importación. La portada enlaza al registro y `/reservar` indica a los visitantes que usen el enlace del negocio. Las rutas `/b/<slug>` aceptan reservas de los negocios registrados y los datos de la demo quedan en las tablas originales.
+Para lanzar sin la agenda histórica de Estudio Norte, configura `STRAVLY_SHOW_DEMO=0` y omite la importación. `/reservar` indica a los visitantes que usen el enlace de su negocio, y los datos de Estudio Norte quedan en las tablas originales. La demo pública `/demo` funciona de forma independiente y ofrece una simulación sin datos de clientes ni escrituras en Supabase.
 
 Las filas originales quedan en sus tablas de la versión 1. La función copia los servicios, horarios, bloqueos, accesos y reservas conservando los identificadores y el código de cada cita. Las reservas antiguas se asocian al profesional «Agenda original», con el horario existente y los servicios migrados. El dueño debe identificarse explícitamente. Los demás usuarios de `administrators` quedan como administradores del negocio.
 
