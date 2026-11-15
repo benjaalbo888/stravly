@@ -23,6 +23,8 @@ La demo **Barbería Demo** incluye tres servicios y dos profesionales ficticios.
 | ![Selección de servicio, profesional y horario](docs/capturas/portfolio-demo-reserva.png) | ![Agenda semanal con dos profesionales](docs/capturas/portfolio-agenda.png) |
 | [Reserva en móvil](docs/capturas/portfolio-demo-movil.png) | [Gestión de profesionales](docs/capturas/portfolio-trabajadores.png) |
 
+[Portada en tablet](docs/capturas/portfolio-portada-tablet.png) · [Portada en móvil](docs/capturas/portfolio-portada-movil.png) · [Portada anterior](https://github.com/benjaalbo888/stravly/blob/24ad9a4/docs/capturas/portfolio-portada.png)
+
 Las capturas se tomaron en la aplicación con negocios, profesionales y clientes ficticios.
 
 ## Tecnologías y arquitectura
