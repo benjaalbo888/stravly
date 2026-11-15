@@ -154,7 +154,7 @@ async function WorkersPanel({ client,id,workers }: { client: Client; id: string;
     <section className="card stack"><h2>Añadir profesional</h2>
       <AdminForm action={editWorker.bind(null,id)} submit="Añadir profesional"><WorkerFields /></AdminForm></section>
     <section className="card stack"><h2>Equipo</h2>
-      {workers.map((worker) => <details key={worker.id} className="admin-detail">
+      {workers.map((worker) => <details key={worker.id} className="admin-detail" data-testid="worker-card">
         <summary>{worker.name} {worker.active ? "" : "(inactivo)"}</summary>
         <div className="stack mt-4">
           <AdminForm action={editWorker.bind(null,id)} submit="Guardar profesional"><WorkerFields item={worker} /></AdminForm>

@@ -53,7 +53,7 @@ async function service(page: Page, name: string) {
 }
 
 async function setupWorker(page: Page, worker: string, name: string, setHours = false) {
-  const card = page.locator("details").filter({has: page.locator("summary").filter({hasText:new RegExp(`^${worker}$`)})}).first();
+  const card = page.getByTestId("worker-card").filter({hasText: worker});
   await card.locator("summary").first().click();
   await card.getByLabel(name,{exact:true}).check();
   await card.getByRole("button",{name:"Guardar servicios",exact:true}).click();
