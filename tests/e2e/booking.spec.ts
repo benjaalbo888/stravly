@@ -4,6 +4,7 @@ import { addDays, santiagoDate } from "../../src/lib/schedule";
 test("portada adaptable, foco visible y navegación pública", async ({ page }, info) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Tus reservas, sin complicaciones.");
+  await expect(page.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute("href", /^https:\/\/github\.com\/[\w.-]+\/stravly$/);
   await page.keyboard.press("Tab");
   await expect(page.getByRole("link", { name: "Saltar al contenido" })).toBeFocused();
   await page.keyboard.press("Tab");

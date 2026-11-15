@@ -35,7 +35,7 @@ Copia `.env.example` a `.env.local` (`Copy-Item .env.example .env.local` en Powe
 | `SUPABASE_URL` | URL del proyecto, disponible en **Connect**. |
 | `SUPABASE_PUBLISHABLE_KEY` | Clave `sb_publishable_…` de **Project Settings → API Keys**. |
 | `SUPABASE_SECRET_KEY` | Clave `sb_secret_…` del mismo proyecto. Solo servidor. |
-| `STRAVLY_GITHUB_URL` | Opcional. URL real del repositorio para el enlace del sitio. |
+| `STRAVLY_GITHUB_URL` | Opcional. Sustituye el enlace al repositorio oficial si alojas una copia pública llamada `stravly`. |
 
 La clave secreta da acceso privilegiado al proyecto. Guárdala en `.env.local` o en las variables sensibles de Vercel. Evita el prefijo `NEXT_PUBLIC_` y no subas este archivo.
 

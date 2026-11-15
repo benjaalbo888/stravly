@@ -2,10 +2,10 @@
 
 ## Preparación
 
-1. Crea un proyecto nuevo dedicado a Stravly en [Supabase](https://supabase.com/dashboard). Completa la migración, desactiva el registro público y prepara el primer administrador siguiendo el [README](../README.md).
+1. Crea un proyecto nuevo dedicado a Stravly en [Supabase](https://supabase.com/dashboard). Mantén habilitada **Data API** y desactiva **Automatically expose new tables** para usar únicamente los permisos explícitos de la migración. Completa la migración, desactiva el registro público y prepara el primer administrador siguiendo el [README](../README.md).
 2. Inicia sesión oficialmente en [Vercel](https://vercel.com/login), o en PowerShell ejecuta `npx --yes vercel login --github`.
 3. En la cuenta correcta, comprueba que el nombre `stravly` esté libre. Crea un proyecto **nuevo** con `npx --yes vercel project add stravly` y vincula esta carpeta con `npx --yes vercel link --project stravly`. Si el nombre ya existe, revisa su origen antes de usarlo.
-4. En **Settings → Environment Variables** del proyecto, configura `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY` en **Preview** y **Production**. Marca la clave secreta como sensible. Si tienes un segundo proyecto de Supabase para pruebas, usa sus valores en **Preview**. Configura `STRAVLY_GITHUB_URL` con la URL pública real del repositorio. Conserva las variables de sistema de Vercel habilitadas para el límite por IP; localmente, el límite se comparte entre las solicitudes de prueba.
+4. En **Settings → Environment Variables** del proyecto, configura `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY` en **Preview** y **Production**. Marca la clave secreta como sensible. Si tienes un segundo proyecto de Supabase para pruebas, usa sus valores en **Preview**. Conserva las variables de sistema de Vercel habilitadas para el límite por IP; localmente, el límite se comparte entre las solicitudes de prueba.
 
 ## Verificación antes de producción
 

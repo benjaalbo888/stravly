@@ -22,12 +22,12 @@ export function Header() {
 
 export function Footer() {
   const repo = process.env.STRAVLY_GITHUB_URL;
-  const repoUrl = repo && /^https:\/\/github\.com\/[\w.-]+\/stravly\/?$/i.test(repo) ? repo : "";
+  const repoUrl = repo && /^https:\/\/github\.com\/[\w.-]+\/stravly\/?$/i.test(repo) ? repo : "https://github.com/benjaalbo888/stravly";
   return <footer className="site-footer">
     <div className="shell footer-row"><Brand /><p>Tu tiempo, mejor organizado.</p>
       <div className="footer-links">
         <span>Proyecto de portafolio</span>
-        {repoUrl && <a href={repoUrl} rel="noopener noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>}
+        <a href={repoUrl} rel="noopener noreferrer">GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
       </div>
     </div>
   </footer>;
