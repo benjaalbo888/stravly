@@ -48,6 +48,7 @@ Copia `.env.example` a `.env.local` (`Copy-Item .env.example .env.local` en Powe
 | `SUPABASE_SECRET_KEY` | Clave `sb_secret_…` del mismo proyecto. Solo servidor. |
 | `STRAVLY_GITHUB_URL` | Opcional. Sustituye el enlace al repositorio oficial si alojas una copia pública llamada `stravly`. |
 | `STRAVLY_MULTI_BUSINESS` | Activa las rutas 2.0 con `1`. El valor predeterminado `0` mantiene la aplicación original. |
+| `STRAVLY_SHOW_DEMO` | Opcional en 2.0. Usa `0` para habilitar la portada sin la agenda de demostración de Estudio Norte. |
 
 La clave secreta da acceso privilegiado al proyecto. Guárdala en `.env.local` o en las variables sensibles de Vercel. Evita el prefijo `NEXT_PUBLIC_` y no subas este archivo.
 

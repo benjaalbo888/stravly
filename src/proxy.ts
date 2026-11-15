@@ -1,12 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { publicConfig, sessionCookie } from "@/lib/supabase/env";
+import { demoBookingEnabled, publicConfig, sessionCookie } from "@/lib/supabase/env";
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
   if (multi) {
-    if (path === "/reservar") return NextResponse.redirect(new URL("/b/estudio-norte", request.url));
+    if (path === "/reservar") {
+      return demoBookingEnabled() ? NextResponse.redirect(new URL("/b/estudio-norte", request.url)) : NextResponse.next();
+    }
     if (path === "/admin/login") return NextResponse.redirect(new URL("/login", request.url));
     if (path === "/admin" || path.startsWith("/admin/")) return NextResponse.redirect(new URL("/dashboard", request.url));
   } else if (!path.startsWith("/admin") && path !== "/reservar") {

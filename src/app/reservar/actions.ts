@@ -9,7 +9,8 @@ import { bookingInput, field, isSlug, workerId } from "@/lib/validation";
 import type { BookingState } from "@/lib/models";
 
 export async function reserve(slug: string | null, _: BookingState, form: FormData): Promise<BookingState> {
-  if (slug && process.env.STRAVLY_MULTI_BUSINESS !== "1") return { error: "Esta agenda aún no está disponible." };
+  const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
+  if (Boolean(slug) !== multi) return { error: "Esta agenda no está disponible. Abre el enlace de reservas del negocio." };
   if (field(form, "website")) return { error: "No pudimos procesar la solicitud." };
   const input = bookingInput(form);
   if (!input) return { error: "Revisa el servicio, el horario y tus datos de contacto." };

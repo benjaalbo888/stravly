@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarCheck2, CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, MousePointer2 } from "lucide-react";
 import { Footer, Header } from "@/components/brand";
+import { demoBookingEnabled } from "@/lib/supabase/env";
 
 const benefits = [
   { icon: MousePointer2, title: "Reserva en pocos pasos", text: "Elige el servicio que necesitas y confirma tu cita desde cualquier dispositivo." },
@@ -33,6 +34,7 @@ function CalendarPreview() {
 
 export default function Home() {
   const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
+  const showDemo = multi && demoBookingEnabled();
   return <>
     <Header />
     <main id="contenido">
@@ -44,9 +46,9 @@ export default function Home() {
             <p>{multi ? "Administra tu equipo y comparte una agenda de reservas propia para cada negocio." : "Elige un servicio, encuentra el horario que más te acomode y confirma tu cita en minutos."}</p>
             <div className="hero-actions">
               <Link className="button button-primary" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear mi negocio" : "Reservar una cita"} <ArrowRight size={18} /></Link>
-              <Link className="button button-quiet" href={multi ? "/b/estudio-norte" : "#como-funciona"}>{multi ? "Ver la demo" : "Cómo funciona"}</Link>
+              <Link className="button button-quiet" href={showDemo ? "/reservar" : "#como-funciona"}>{showDemo ? "Ver la demo" : "Cómo funciona"}</Link>
             </div>
-            <div className="hero-note"><Check size={15} aria-hidden="true"/> No necesitas crear una cuenta</div>
+            <div className="hero-note"><Check size={15} aria-hidden="true"/> {multi ? "Tus clientes reservan sin crear una cuenta" : "No necesitas crear una cuenta"}</div>
           </div>
           <CalendarPreview />
         </div>
@@ -63,7 +65,7 @@ export default function Home() {
           <ol className="steps-grid">
             {steps.map(({ title, text }, i) => <li key={title}><span className="step-number">0{i + 1}</span><h3>{title}</h3><p>{text}</p></li>)}
           </ol>
-          <div className="cta-banner"><div><p className="eyebrow">TU PRÓXIMA CITA</p><h2>Reserva cuando quieras.</h2></div><Link className="button button-light" href="/reservar">Ver servicios <ArrowRight size={18}/></Link></div>
+          <div className="cta-banner"><div><p className="eyebrow">{multi ? "TU NEGOCIO" : "TU PRÓXIMA CITA"}</p><h2>{multi ? "Comparte tu propia agenda." : "Reserva cuando quieras."}</h2></div><Link className="button button-light" href={multi ? "/registro" : "/reservar"}>{multi ? "Crear mi negocio" : "Ver servicios"} <ArrowRight size={18}/></Link></div>
         </div>
       </section>
     </main>

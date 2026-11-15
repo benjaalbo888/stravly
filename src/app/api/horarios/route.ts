@@ -10,8 +10,9 @@ export async function GET(request: Request) {
   const worker = params.get("profesional") ?? "any";
   const today = santiagoDate();
   const headers = { "Cache-Control": "no-store" };
-  if (!isUuid(service) || !isDate(date) || date < today || date > addDays(today, BOOKING_DAYS) ||
-      (slug !== null && (process.env.STRAVLY_MULTI_BUSINESS !== "1" || !isSlug(slug) || (worker !== "any" && workerId(worker) === null)))) {
+  const multi = process.env.STRAVLY_MULTI_BUSINESS === "1";
+  if ((slug !== null) !== multi || !isUuid(service) || !isDate(date) || date < today || date > addDays(today, BOOKING_DAYS) ||
+      (slug !== null && (!isSlug(slug) || (worker !== "any" && workerId(worker) === null)))) {
     return Response.json({ error: "Elige un servicio y una fecha válidos." }, { status: 400, headers });
   }
   const client = dataClient();

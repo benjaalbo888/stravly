@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, CalendarCheck2, LockKeyhole } from "lucide-react";
+import { demoBookingEnabled } from "@/lib/supabase/env";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   return <Link href="/" className={`brand ${inverse ? "brand-inverse" : ""}`} aria-label="Stravly, inicio">
@@ -14,7 +15,8 @@ export function Header() {
     <div className="shell nav-row">
       <Brand />
       <nav aria-label="Navegación principal" className="main-nav">
-        <Link href="/">Inicio</Link><Link href="/#como-funciona">Cómo funciona</Link><Link href="/reservar">Reservar</Link>
+        <Link href="/">Inicio</Link><Link href="/#como-funciona">Cómo funciona</Link>
+        {demoBookingEnabled() && <Link href="/reservar">Reservar</Link>}
       </nav>
       <Link className="admin-link" href={multi ? "/dashboard" : "/admin"}><LockKeyhole size={15} aria-hidden="true" /> <span>{multi ? "Mis negocios" : "Acceso administrador"}</span></Link>
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Footer, Header } from "@/components/brand";
-import { bookingConfig } from "@/lib/supabase/env";
+import { bookingConfig, demoBookingEnabled } from "@/lib/supabase/env";
 import { dataClient } from "@/lib/supabase/server";
 import { addDays, BOOKING_DAYS, santiagoDate } from "@/lib/schedule";
 import type { Service } from "@/lib/models";
@@ -10,6 +11,12 @@ export const metadata: Metadata = { title: "Reservar una cita" };
 export const dynamic = "force-dynamic";
 
 export default async function BookingPage() {
+  if (!demoBookingEnabled()) return <><Header /><main className="workspace" id="contenido"><div className="shell">
+    <div className="page-intro"><h1>Reserva con tu negocio</h1>
+      <p>Abre el enlace de reservas que te compartió el negocio para ver sus servicios y horarios.</p></div>
+    <Link href="/" className="button button-quiet">Volver a Stravly</Link>
+  </div></main><Footer /></>;
+
   const client = bookingConfig() ? dataClient() : null;
   const [business, services] = client ? await Promise.all([
     client.from("business").select("name").single(),

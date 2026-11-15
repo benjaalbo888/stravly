@@ -1,5 +1,9 @@
 import "server-only";
 
+export function demoBookingEnabled() {
+  return process.env.STRAVLY_MULTI_BUSINESS !== "1" || process.env.STRAVLY_SHOW_DEMO !== "0";
+}
+
 export function publicConfig() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_PUBLISHABLE_KEY;
