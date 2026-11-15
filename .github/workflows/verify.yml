@@ -75,11 +75,12 @@ jobs:
           NEXT_TELEMETRY_DISABLED: '1'
         run: |
           set -a
-          source <(npx --yes supabase@3.1.0 status --workdir .local/supabase-ci -o env | sed -nE '/^(API_URL|PUBLISHABLE_KEY|SECRET_KEY|MAILPIT_URL)=/p')
+          source <(npx --yes supabase@3.1.0 status --workdir .local/supabase-ci -o env | sed -nE '/^(API_URL|DB_URL|PUBLISHABLE_KEY|SECRET_KEY|MAILPIT_URL)=/p')
           export SUPABASE_URL="$API_URL" SUPABASE_PUBLISHABLE_KEY="$PUBLISHABLE_KEY" SUPABASE_SECRET_KEY="$SECRET_KEY"
           set +a
           test -n "$SUPABASE_PUBLISHABLE_KEY"
           test -n "$SUPABASE_SECRET_KEY"
+          node tests/supabase/seed-demo.mjs
           npm run build
           npm run test:multi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

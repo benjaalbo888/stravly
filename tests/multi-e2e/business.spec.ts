@@ -84,12 +84,16 @@ test("registro real, dos negocios, equipo, permisos y reservas desde Chrome",asy
   const contender = await browser.newPage();
   await client.goto("/dashboard");
   await expect(client).toHaveURL(/\/login$/);
+  await client.goto("/reservar");
+  await expect(client).toHaveURL(/\/b\/estudio-norte$/);
+  await expect(client.getByRole("heading",{name:"Estudio Norte",exact:true})).toBeVisible();
+  await expect(client.getByRole("radio",{name:/Corte clásico/})).toBeVisible();
   await register(owner,`central-${suffix}@example.test`);
   await register(other,`norte-${suffix}@example.test`);
   const first = await onboard(owner,slugA,"Barbería Central");
   await service(owner,"Corte Central");
   await owner.getByRole("link",{name:"Trabajadores",exact:true}).click();
-  await owner.getByLabel("Nombre del profesional",{exact:true}).fill("Profesional Dos");
+  await owner.getByRole("textbox",{name:"Nombre del profesional",exact:true}).fill("Profesional Dos");
   await owner.getByRole("button",{name:"Añadir profesional",exact:true}).click();
   await expect(owner.getByText(/Profesional guardado/)).toBeVisible();
   await setupWorker(owner,"Profesional Uno","Corte Central");
