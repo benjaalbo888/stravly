@@ -23,6 +23,14 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Lucide, Supabase Auth y Pos
 
 [Portada en móvil](docs/capturas/inicio-movil.png) · [Formulario de reserva con horarios libres](docs/capturas/reserva-escritorio.png) · [Agenda con una cita ficticia](docs/capturas/agenda-escritorio.png)
 
+## Capturas de Stravly 2.0
+
+Estas vistas se capturaron durante la prueba integral con Supabase y datos ficticios.
+
+![Agenda semanal con dos profesionales atendiendo simultáneamente](docs/capturas/multi-agenda.png)
+
+[Gestión de profesionales y horarios](docs/capturas/multi-trabajadores.png) · [Reserva pública en móvil](docs/capturas/multi-reserva-movil.png)
+
 ## Ejecutar en local
 
 Requisitos: Node.js 24, npm y un proyecto Supabase dedicado a Stravly.

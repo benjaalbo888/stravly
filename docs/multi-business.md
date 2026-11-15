@@ -27,7 +27,7 @@ select stravly_private.import_estudio_norte('<uuid-del-propietario-confirmado>':
 ```
 
 4. Si otra transacción mantiene la agenda ocupada, la función aborta la operación completa. Espera a que termine y vuelve a comprobar los recuentos antes de reintentar. La importación bloquea las escrituras de las rutas antiguas dentro de la misma transacción que copia los registros.
-5. Asigna el dominio de producción al despliegue ya verificado. Activa el registro con confirmación y SMTP configurado. Comprueba que Estudio Norte conserva sus reservas, que sus enlaces antiguos redirigen y que una cuenta nueva puede apartarse de Estudio Norte y crear su propio negocio.
+5. Asigna el dominio de producción al despliegue ya verificado. Activa el registro con confirmación y SMTP configurado. Comprueba que Estudio Norte conserva sus reservas, que sus enlaces antiguos redirigen y que una cuenta recién verificada puede crear un negocio independiente.
 
 Antes de ejecutar la función se puede volver a desplegar la aplicación anterior porque las tablas existentes siguen operativas. Después del corte, cualquier recuperación debe preservar las escrituras de 2.0. Si hay tráfico nuevo, conserva ambas bases o snapshots y restaura primero en un entorno aislado para conciliar transacciones antes de tocar producción.
 
